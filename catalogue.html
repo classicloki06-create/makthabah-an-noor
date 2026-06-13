@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse a premium Islamic bookstore catalogue with detailed book information.">
+  <title>Islamic Bookstore Catalogue</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="Main navigation">
+      <a class="brand" href="catalogue.html" aria-label="Islamic Bookstore home">
+        <span class="brand-mark" aria-hidden="true">IB</span>
+        <span>
+          <span class="brand-name">Islamic Bookstore</span>
+          <span class="brand-tagline">Curated knowledge for every home</span>
+        </span>
+      </a>
+      <div class="nav-links">
+        <a href="catalogue.html" aria-current="page">Catalogue</a>
+        <a href="#featured">Featured</a>
+        <a href="#categories">Categories</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="catalogue-hero">
+      <div class="hero-content">
+        <p class="eyebrow">Premium Islamic Book Collection</p>
+        <h1>Browse Books for Study, Reflection, and Daily Practice</h1>
+        <p class="hero-copy">
+          Carefully presented titles across Seerah, Aqeedah, Fiqh, Tazkiyah, and Islamic history.
+        </p>
+      </div>
+    </section>
+
+    <section class="catalogue-section" id="featured" aria-labelledby="catalogue-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Featured Catalogue</p>
+          <h2 id="catalogue-title">Available Books</h2>
+        </div>
+        <p class="section-note">Detailed pages are available for every title.</p>
+      </div>
+
+      <div class="book-grid" id="bookGrid" aria-live="polite"></div>
+    </section>
+
+    <section class="category-strip" id="categories" aria-labelledby="category-title">
+      <div>
+        <p class="eyebrow">Browse by Interest</p>
+        <h2 id="category-title">Core Islamic Subjects</h2>
+      </div>
+      <div class="category-tags" aria-label="Book categories">
+        <span>Aqeedah</span>
+        <span>Fiqh</span>
+        <span>Seerah</span>
+        <span>Tazkiyah</span>
+        <span>Islamic History</span>
+        <span>Character Development</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Islamic Bookstore. Knowledge, guidance, and timeless reads.</p>
+  </footer>
+
+  <script src="books.js"></script>
+  <script>
+    const bookGrid = document.querySelector("#bookGrid");
+
+    function buildCoverFallback(book) {
+      return `
+        <div class="cover-fallback" aria-hidden="true">
+          <span>${book.category}</span>
+          <strong>${book.title}</strong>
+        </div>
+      `;
+    }
+
+    function renderStars(rating) {
+      const roundedRating = Math.round(rating);
+      return "★★★★★".slice(0, roundedRating) + "☆☆☆☆☆".slice(0, 5 - roundedRating);
+    }
+
+    function renderCatalogue() {
+      bookGrid.innerHTML = books
+        .map(
+          (book) => `
+            <a class="book-card" href="book.html?id=${book.id}" aria-label="View details for ${book.title}">
+              <div class="book-cover-wrap">
+                <!-- Replace this placeholder image file with the real cover when updating books.js. -->
+                <img src="${book.image}" alt="Cover of ${book.title}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.hidden=false;">
+                <div hidden>${buildCoverFallback(book)}</div>
+              </div>
+              <div class="book-card-body">
+                <!-- Titles, authors, ratings, and previews are loaded from books.js for easier maintenance. -->
+                <p class="book-category">${book.category}</p>
+                <h3>${book.title}</h3>
+                <p class="book-author">By ${book.author}</p>
+                <div class="rating-row" aria-label="Rating ${book.rating} out of 5">
+                  <span class="stars" aria-hidden="true">${renderStars(book.rating)}</span>
+                  <span>${book.rating.toFixed(1)}</span>
+                </div>
+                <p class="book-preview">${book.preview}</p>
+              </div>
+            </a>
+          `
+        )
+        .join("");
+    }
+
+    renderCatalogue();
+  </script>
+</body>
+</html>
