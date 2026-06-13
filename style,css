@@ -1,4 +1,4 @@
-  :root {
+:root {
   --color-ink: #17211c;
   --color-muted: #65736b;
   --color-line: #e5ebe6;
