@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View detailed information for a selected Islamic bookstore catalogue title.">
+  <title>Book Details | Islamic Bookstore</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="Main navigation">
+      <a class="brand" href="catalogue.html" aria-label="Islamic Bookstore home">
+        <span class="brand-mark" aria-hidden="true">IB</span>
+        <span>
+          <span class="brand-name">Islamic Bookstore</span>
+          <span class="brand-tagline">Curated knowledge for every home</span>
+        </span>
+      </a>
+      <div class="nav-links">
+        <a href="catalogue.html">Catalogue</a>
+        <a href="catalogue.html#featured">Featured</a>
+        <a href="catalogue.html#categories">Categories</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div id="bookDetails" class="details-shell" aria-live="polite"></div>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Islamic Bookstore. Knowledge, guidance, and timeless reads.</p>
+  </footer>
+
+  <script src="books.js"></script>
+  <script>
+    const detailsRoot = document.querySelector("#bookDetails");
+    const params = new URLSearchParams(window.location.search);
+    const bookId = Number(params.get("id"));
+    const selectedBook = books.find((book) => book.id === bookId);
+
+    function buildCoverFallback(book) {
+      return `
+        <div class="cover-fallback large" aria-hidden="true">
+          <span>${book.category}</span>
+          <strong>${book.title}</strong>
+        </div>
+      `;
+    }
+
+    function renderStars(rating) {
+      const roundedRating = Math.round(rating);
+      return "★★★★★".slice(0, roundedRating) + "☆☆☆☆☆".slice(0, 5 - roundedRating);
+    }
+
+    function getAvailabilityClass(status) {
+      return status.toLowerCase().replaceAll(" ", "-");
+    }
+
+    function renderMissingBook() {
+      detailsRoot.innerHTML = `
+        <section class="empty-state">
+          <p class="eyebrow">Book Not Found</p>
+          <h1>We could not find that catalogue item.</h1>
+          <p>Please return to the catalogue and select another book.</p>
+          <a class="primary-button" href="catalogue.html">Back to Catalogue</a>
+        </section>
+      `;
+    }
+
+    function renderBookDetails(book) {
+      document.title = `${book.title} | Islamic Bookstore`;
+
+      detailsRoot.innerHTML = `
+        <a class="back-link" href="catalogue.html">Back to catalogue</a>
+
+        <section class="book-detail-hero">
+          <div class="detail-cover-panel">
+            <!-- Replace this placeholder image in books.js when adding the real book cover. -->
+            <img class="detail-cover" src="${book.image}" alt="Cover of ${book.title}" onerror="this.style.display='none'; this.nextElementSibling.hidden=false;">
+            <div hidden>${buildCoverFallback(book)}</div>
+          </div>
+
+          <div class="detail-summary">
+            <!-- Replace book title, author, category, rating, reviews, and availability in books.js. -->
+            <p class="book-category">${book.category}</p>
+            <h1>${book.title}</h1>
+            <p class="detail-author">By ${book.author}</p>
+
+            <div class="detail-meta-row">
+              <div class="rating-row" aria-label="Rating ${book.rating} out of 5 from ${book.reviews} reviews">
+                <span class="stars" aria-hidden="true">${renderStars(book.rating)}</span>
+                <span>${book.rating.toFixed(1)}</span>
+              </div>
+              <span class="review-count">${book.reviews} reviews</span>
+            </div>
+
+            <p class="availability ${getAvailabilityClass(book.availability)}">${book.availability}</p>
