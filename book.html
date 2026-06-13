@@ -97,3 +97,66 @@
             </div>
 
             <p class="availability ${getAvailabilityClass(book.availability)}">${book.availability}</p>
+
+            <p class="summary-preview">${book.preview}</p>
+
+            <!--
+              Future enquiry connections:
+              - Link this button to WhatsApp with a pre-filled message.
+              - Link this button to Instagram direct messages or your Instagram profile.
+              - Open a contact form modal or send visitors to a contact page.
+            -->
+            <button class="primary-button" type="button">Enquire About This Book</button>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <h2>Book Description</h2>
+          <!-- Replace the placeholder description in books.js with the actual book description. -->
+          <p>${book.description}</p>
+        </section>
+
+        <section class="detail-section info-section">
+          <h2>Additional Information</h2>
+          <dl class="info-grid">
+            <div>
+              <dt>Publisher</dt>
+              <dd>${book.publisher}</dd>
+            </div>
+            <div>
+              <dt>Language</dt>
+              <dd>${book.language}</dd>
+            </div>
+            <div>
+              <dt>Number of Pages</dt>
+              <dd>${book.pages}</dd>
+            </div>
+            <div>
+              <dt>ISBN</dt>
+              <dd>${book.isbn}</dd>
+            </div>
+            <div>
+              <dt>Publication Year</dt>
+              <dd>${book.year}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="detail-section">
+          <h2>Key Topics Covered</h2>
+          <!-- Add or edit topic tags in the topics array for each book in books.js. -->
+          <div class="topic-tags">
+            ${book.topics.map((topic) => `<span>${topic}</span>`).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    if (selectedBook) {
+      renderBookDetails(selectedBook);
+    } else {
+      renderMissingBook();
+    }
+  </script>
+</body>
+</html>
