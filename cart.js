@@ -1,4 +1,4 @@
-const WHATSAPP_NUMBER = "919876543210";
+const WHATSAPP_NUMBER = "917824023183";
 const CART_STORAGE_KEY = "maktabahAnNoorCart";
 
 const Cart = (() => {
