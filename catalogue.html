@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse Islamic books, e-books, journals, planners, trackers, and digital resources from MAKTABAH AN NOOR.">
+  <title>MAKTABAH AN NOOR | Products & Digital Resources</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="Main navigation">
+      <a class="brand" href="catalogue.html" aria-label="MAKTABAH AN NOOR home">
+        <span class="brand-mark" aria-hidden="true">MN</span>
+        <span>
+          <span class="brand-name">MAKTABAH AN NOOR</span>
+          <span class="brand-tagline">Islamic books and digital resources</span>
+        </span>
+      </a>
+      <div class="nav-actions">
+        <div class="nav-links">
+          <a href="catalogue.html" aria-current="page">Catalogue</a>
+          <a href="#featured">Products</a>
+          <a href="#categories">Categories</a>
+        </div>
+        <button class="cart-nav-button" type="button" data-cart-open aria-label="Open cart">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6.5 7h11l-1 9h-9l-1-9Z"></path>
+            <path d="M9 7a3 3 0 0 1 6 0"></path>
+            <path d="M9 20h.01M15 20h.01"></path>
+          </svg>
+          <span>Cart</span>
+          <span class="cart-count" data-cart-count hidden>0</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="catalogue-hero">
+      <div class="hero-content">
+        <p class="eyebrow">Islamic Digital Storefront</p>
+        <h1>MAKTABAH AN NOOR</h1>
+        <p class="hero-copy">
+          Browse Islamic books, e-books, journals, salah trackers, Ramadan planners, Qur'an tracking journals, and thoughtful reading accessories.
+        </p>
+      </div>
+    </section>
+
+    <section class="catalogue-section" id="featured" aria-labelledby="catalogue-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Curated Storefront</p>
+          <h2 id="catalogue-title">Products & Digital Resources</h2>
+        </div>
+        <p class="section-note">Add products to your cart and send your order request through WhatsApp.</p>
+      </div>
+
+      <div class="book-grid" id="bookGrid" aria-live="polite"></div>
+    </section>
+
+    <section class="category-strip" id="categories" aria-labelledby="category-title">
+      <div>
+        <p class="eyebrow">Browse by Interest</p>
+        <h2 id="category-title">Categories</h2>
+      </div>
+      <div class="category-tags" aria-label="Product categories">
+        <span>Aqeedah</span>
+        <span>Fiqh</span>
+        <span>Seerah</span>
+        <span>Tazkiyah</span>
+        <span>Islamic History</span>
+        <span>Biography</span>
+        <span>Quran Studies</span>
+        <span>Journals</span>
+        <span>Planners</span>
+        <span>Digital Resources</span>
+        <span>Character Development</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 MAKTABAH AN NOOR. Islamic books, resources, and order requests handled with care.</p>
+  </footer>
+
+  <script src="books.js"></script>
+  <script src="cart.js"></script>
+  <script>
+    const bookGrid = document.querySelector("#bookGrid");
+
+    function buildCoverFallback(product) {
+      return `
+        <div class="cover-fallback" aria-hidden="true">
+          <span>${product.category}</span>
+          <strong>${product.title}</strong>
+        </div>
+      `;
+    }
+
+    function renderCatalogue() {
+      bookGrid.innerHTML = books
+        .map(
+          (product) => `
+            <article class="book-card" data-card-link="book.html?id=${product.id}">
+              <a class="book-card-link" href="book.html?id=${product.id}" aria-label="View details for ${product.title}">
+                <div class="book-cover-wrap">
+                  <!-- Replace this placeholder image file with the real product image in books.js. -->
+                  <img src="${product.image}" alt="Cover or product image for ${product.title}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.hidden=false;">
+                  <div hidden>${buildCoverFallback(product)}</div>
+                </div>
+                <div class="book-card-body">
+                  <!-- Product titles, authors, formats, descriptions, and categories are loaded from books.js. -->
+                  <div class="card-badge-row">
+                    <p class="book-category">${product.category}</p>
+                    ${product.digital ? '<span class="digital-badge">Digital Product</span>' : ""}
+                  </div>
+                  <h3>${product.title}</h3>
+                  <p class="book-author">By ${product.author}</p>
+                  <p class="product-format">${product.format}</p>
+                  <p class="book-preview">${product.preview}</p>
+                </div>
+              </a>
+              <button class="secondary-button card-cart-button" type="button" data-add-to-cart="${product.id}">Add to Cart</button>
+            </article>
+          `
+        )
+        .join("");
+    }
+
+    renderCatalogue();
+    Cart.bindEvents();
+
+    document.querySelectorAll("[data-card-link]").forEach((card) => {
+      card.addEventListener("click", (event) => {
+        if (!event.target.closest("button, a")) {
+          window.location.href = card.dataset.cardLink;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View product details for MAKTABAH AN NOOR Islamic books and digital resources.">
+  <title>Product Details | MAKTABAH AN NOOR</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="Main navigation">
+      <a class="brand" href="catalogue.html" aria-label="MAKTABAH AN NOOR home">
+        <span class="brand-mark" aria-hidden="true">MN</span>
+        <span>
+          <span class="brand-name">MAKTABAH AN NOOR</span>
+          <span class="brand-tagline">Islamic books and digital resources</span>
+        </span>
+      </a>
+      <div class="nav-actions">
+        <div class="nav-links">
+          <a href="catalogue.html">Catalogue</a>
+          <a href="catalogue.html#featured">Products</a>
+          <a href="catalogue.html#categories">Categories</a>
+        </div>
+        <button class="cart-nav-button" type="button" data-cart-open aria-label="Open cart">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6.5 7h11l-1 9h-9l-1-9Z"></path>
+            <path d="M9 7a3 3 0 0 1 6 0"></path>
+            <path d="M9 20h.01M15 20h.01"></path>
+          </svg>
+          <span>Cart</span>
+          <span class="cart-count" data-cart-count hidden>0</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div id="bookDetails" class="details-shell" aria-live="polite"></div>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 MAKTABAH AN NOOR. Digital access is provided manually after payment confirmation.</p>
+  </footer>
+
+  <script src="books.js"></script>
+  <script src="cart.js"></script>
+  <script>
+    const detailsRoot = document.querySelector("#bookDetails");
+    const params = new URLSearchParams(window.location.search);
+    const productId = Number(params.get("id"));
+    const selectedProduct = books.find((product) => product.id === productId);
+
+    function buildCoverFallback(product) {
+      return `
+        <div class="cover-fallback large" aria-hidden="true">
+          <span>${product.category}</span>
+          <strong>${product.title}</strong>
+        </div>
+      `;
+    }
+
+    function getAvailabilityClass(status) {
+      return status.toLowerCase().replaceAll(" ", "-");
+    }
+
+    function renderMissingProduct() {
+      detailsRoot.innerHTML = `
+        <section class="empty-state">
+          <p class="eyebrow">Product Not Found</p>
+          <h1>We could not find that catalogue item.</h1>
+          <p>Please return to the catalogue and select another product.</p>
+          <a class="primary-button" href="catalogue.html">Back to Catalogue</a>
+        </section>
+      `;
+    }
+
+    function renderProductDetails(product) {
+      document.title = `${product.title} | MAKTABAH AN NOOR`;
+
+      detailsRoot.innerHTML = `
+        <a class="back-link" href="catalogue.html">Back to catalogue</a>
+
+        <section class="book-detail-hero">
+          <div class="detail-cover-panel">
+            <!-- Replace this placeholder image in books.js when adding the real product image. -->
+            <img class="detail-cover" src="${product.image}" alt="Cover or product image for ${product.title}" onerror="this.style.display='none'; this.nextElementSibling.hidden=false;">
+            <div hidden>${buildCoverFallback(product)}</div>
+          </div>
+
+          <div class="detail-summary">
+            <!-- Replace product title, author, category, format, and availability in books.js. -->
+            <div class="card-badge-row detail-badges">
+              <p class="book-category">${product.category}</p>
+              ${product.digital ? '<span class="digital-badge">Digital Product</span>' : ""}
+            </div>
+            <h1>${product.title}</h1>
+            <p class="detail-author">By ${product.author}</p>
+            <p class="product-format">${product.format}</p>
+
+            <p class="availability ${getAvailabilityClass(product.availability)}">${product.availability}</p>
+
+            <p class="summary-preview">${product.preview}</p>
+
+            ${
+              product.digital
+                ? '<p class="digital-note">This is a digital product. No automatic download is provided; access is sent manually after payment confirmation.</p>'
+                : ""
+            }
+
+            <div class="detail-actions">
+              <button class="primary-button" type="button" data-add-to-cart="${product.id}" data-open-cart="true">Add to Cart</button>
+              <button class="secondary-button" type="button" data-order-whatsapp="${product.id}">Order via WhatsApp</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <h2>Product Description</h2>
+          <!-- Replace this description in books.js when adding final product copy. -->
+          <p>${product.description}</p>
+        </section>
+
+        <section class="detail-section info-section">
+          <h2>Additional Information</h2>
+          <dl class="info-grid">
+            <div>
+              <dt>Publisher</dt>
+              <dd>${product.publisher}</dd>
+            </div>
+            <div>
+              <dt>Language</dt>
+              <dd>${product.language}</dd>
+            </div>
+            <div>
+              <dt>Pages / Format</dt>
+              <dd>${product.pages}</dd>
+            </div>
+            <div>
+              <dt>ISBN</dt>
+              <dd>${product.isbn}</dd>
+            </div>
+            <div>
+              <dt>Publication Year</dt>
+              <dd>${product.year}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="detail-section">
+          <h2>Key Topics Covered</h2>
+          <!-- Add or edit topic tags in the topics array for each product in books.js. -->
+          <div class="topic-tags">
+            ${product.topics.map((topic) => `<span>${topic}</span>`).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    if (selectedProduct) {
+      renderProductDetails(selectedProduct);
+    } else {
+      renderMissingProduct();
+    }
+
+    Cart.bindEvents();
+  </script>
+</body>
+</html>
